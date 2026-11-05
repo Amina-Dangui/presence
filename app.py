@@ -16,7 +16,7 @@ jour=st.date_input("Date du jour")
 st.header("Appel du jour")
 statuts=["Present","Retard", "Absent" , "Absence justifiée"]
 liste_eleves = data_filtre["NOM"].tolist()
-historique=conn.read(worksheet=("presences_" + ecole,ttl=0)
+historique=conn.read(worksheet="presences_" + ecole,ttl=0)
 lignes=[]
 for nom in liste_eleves:
   col1, col2 = st.columns([3,1])
