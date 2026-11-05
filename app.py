@@ -31,7 +31,8 @@ if ecole=="coranique":
   section=st.sidebar.selectbox("Quel genre?", ["homme","femme"])
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
 
-data=conn.read(worksheet="eleves_" + ecole, ttl=0)
+tous_eleves = conn.read(worksheet="eleves_" + ecole , ttl=0)
+data=tous_eleves[tous_eleves["PROF"].astype(str)==code]
 with st.sidebar.expander('Gérer les élèves'):
     st.subheader('Ajouter')
     nouveau = st.text_input('Nom du nouvel élève')
@@ -43,17 +44,17 @@ with st.sidebar.expander('Gérer les élèves'):
             st.warning('Écris un nom')
         else:
             if ecole == 'coranique':
-                eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section}
+                eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section , "PROF": code}
             else:
-                eleve = {'NOM': nouveau.strip()}
-            data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
+                eleve = {'NOM': nouveau.strip() , "PROF": code}
+            data = pd.concat([tous_eleves, pd.DataFrame([eleve])], ignore_index=True)
             conn.update(worksheet='eleves_' + ecole, data=data)
             st.rerun()
 
     st.subheader('Retirer')
     a_retirer = st.selectbox('Élève à retirer', data['NOM'].tolist(), key='retirer')
     if st.button('Retirer'):
-        data = data[data['NOM'] != a_retirer]
+        data = tous_eleves[~((tous_eleves['NOM'] == a_retirer) & (tous_eleves["PROF"].astype(str)==code))]
         conn.update(worksheet='eleves_' + ecole, data=data)
         st.rerun()
 
@@ -67,9 +68,10 @@ st.header("Appel du jour")
 statuts=["Present","Retard", "Absent" , "Absence justifiée"]
 liste_eleves = data_filtre["NOM"].tolist()
 historique=conn.read(worksheet="presences_" + ecole,ttl=0)
+historique = historique[historique["PROF"].astype(str)==code]
 lignes=[]
-for nom in liste_eleves:
-    titre1, titre2, titre3 = st.columns([2, 5, 1])
+
+titre1, titre2, titre3 = st.columns([2, 5, 1])
 titre1.markdown('*Nom*')
 titre2.markdown('*Statut*')
 titre3.markdown('*Présence*')
@@ -93,7 +95,7 @@ for nom in liste_eleves:
     col3.markdown('### ' + str(pourcentage) + ' %')
     st.divider()
 
-    lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix})
+    lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
 if st.button("Enregistrer", type="primary"):
   anciennes=conn.read(worksheet="presences_" + ecole,ttl=0)
   nouvelles=pd.DataFrame(lignes)
