@@ -12,5 +12,12 @@ if ecole=="coranique":
     data_filtre=data[(data["SECTION"]==section) & (data["GROUPE"]==groupe)]
 else:                      
     data_filtre=data
-st.dataframe(data_filtre)  
+jour=st.date_input("Date du jour")
+st.header("Appel du jour")
+statuts=["Present","Retard", "Absent" , "Absence justifié"]
+liste_eleves = data_filtre["NOM"].tolist()
+lignes=[]
+for nom in liste_eleves:
+  choix=st.radio(nom, statuts, horizontal=True, key=nom)
+  lignes.append({"DATE": str(jour),"ELEVE": nom, "STATUT":choix})
 
