@@ -43,7 +43,7 @@ with st.sidebar.expander('Gérer les élèves'):
             else:
                 if ecole == 'coranique':
                    eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section}
-               else:
+                else:
                   eleve = {'NOM': nouveau.strip()}
                data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
                conn.update(worksheet='eleves_' + ecole, data=data)
