@@ -10,5 +10,6 @@ conn=st.connection("gsheets",type=GSheetsConnection)
 data=conn.read(worksheet="eleves_" + ecole, ttl=0)
 if ecole=="coranique":
     data_filtre=data[(data[(data["SECTION"]==section) & (data["GROUPE"]==groupe)]
+                      else:                      
                       
 
