@@ -8,7 +8,53 @@ if ecole=="coranique":
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
 conn=st.connection("gsheets",type=GSheetsConnection)
 data=conn.read(worksheet="eleves_" + ecole, ttl=0)
+with st.sidebar.expander('Gérer les élèves'):
+    st.subheader('Ajouter')
+    nouveau = st.text_input('Nom du nouvel élève')
+    if ecole == 'coranique':
+        nv_section = st.selectbox('Genre', ['femme', 'homme'], key='nv_section')
+        nv_groupe = st.selectbox('Groupe', [1, 2], key='nv_groupe')
+    if st.button('Ajouter'):
+        if nouveau.strip() == '':
+            st.warning('Écris un nom')
+        else:
+            if ecole == 'coranique':
+                eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section}
+            else:
+                eleve = {'NOM': nouveau.strip()}
+            data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
+            conn.update(worksheet='eleves_' + ecole, data=data)
+            st.rerun()
 
+    st.subheader('Retirer')
+    a_retirer = st.selectbox('Élève à retirer', data['NOM'].tolist(), key='retirer')
+    if st.button('Retirer'):
+        data = data[data['NOM'] != a_retirer]
+        conn.update(worksheet='eleves_' + ecole, data=data)
+       with st.sidebar.expander('Gérer les élèves'):
+    st.subheader('Ajouter')
+    nouveau = st.text_input('Nom du nouvel élève')
+    if ecole == 'coranique':
+        nv_section = st.selectbox('Genre', ['femme', 'homme'], key='nv_section')
+        nv_groupe = st.selectbox('Groupe', [1, 2], key='nv_groupe')
+    if st.button('Ajouter'):
+        if nouveau.strip() == '':
+            st.warning('Écris un nom')
+        else:
+            if ecole == 'coranique':
+                eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section}
+            else:
+                eleve = {'NOM': nouveau.strip()}
+            data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
+            conn.update(worksheet='eleves_' + ecole, data=data)
+            st.rerun()
+
+    st.subheader('Retirer')
+    a_retirer = st.selectbox('Élève à retirer', data['NOM'].tolist(), key='retirer')
+    if st.button('Retirer'):
+        data = data[data['NOM'] != a_retirer]
+        conn.update(worksheet='eleves_' + ecole, data=data)
+        st.rerun()
 if ecole=="coranique":
     data_filtre=data[(data["SECTION"]==section) & (data["GROUPE"]==groupe)]
 else:                      
