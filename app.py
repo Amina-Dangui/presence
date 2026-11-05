@@ -2,11 +2,35 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 st.title('Liste de presence')
+conn = st.connection('gsheets', type=GSheetsConnection)
+profs = conn.read(worksheet='profs', ttl=0)
+
+choix_compte = st.radio('Bienvenue !', ['Me connecter', 'Créer mon compte'], horizontal=True)
+
+if choix_compte == 'Créer mon compte':
+    nom_prof = st.text_input('Ton nom')
+    nouveau_code = st.text_input('Choisis ton code', type='password')
+    if st.button('Valider'):
+        if nom_prof.strip() == '' or nouveau_code.strip() == '':
+            st.warning('Remplis les deux cases')
+        elif nouveau_code.strip() in profs['CODE'].astype(str).tolist():
+            st.warning('Ce code existe déjà, choisis-en un autre')
+        else:
+            nouveau_prof = pd.DataFrame([{'NOM_PROF': nom_prof.strip(), 'CODE': nouveau_code.strip()}])
+            profs = pd.concat([profs, nouveau_prof], ignore_index=True)
+            conn.update(worksheet='profs', data=profs)
+            st.success('Compte créé ! Choisis « Me connecter » en haut.')
+    st.stop()
+
+code = st.text_input('Ton code', type='password')
+if code not in profs['CODE'].astype(str).tolist():
+    st.info('Entre ton code pour accéder à ta liste.')
+    st.stop()
 ecole=st.sidebar.selectbox("Choisis l'ecole", ['coranique','classique'])
 if ecole=="coranique":
   section=st.sidebar.selectbox("Quel genre?", ["homme","femme"])
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
-conn=st.connection("gsheets",type=GSheetsConnection)
+
 data=conn.read(worksheet="eleves_" + ecole, ttl=0)
 with st.sidebar.expander('Gérer les élèves'):
     st.subheader('Ajouter')
