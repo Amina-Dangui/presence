@@ -25,7 +25,7 @@ for nom in liste_eleves:
     passe=historique[historique["ELEVE"]==nom]["STATUT"].tolist()
     tous=passe + [choix]
     presents=tous.count("Present") + tous.count("Retard")
-    total=len(tous)-tous.count("Absence justifée)
+    total=len(tous)-tous.count("Absence justifée")
     if total> 0:
         pourcentage=round(presents/total*100)
     else:
