@@ -26,7 +26,7 @@ for nom in liste_eleves:
     tous=passe + [choix]
     presents=tous.count("Present") + tous.count("Retard")
     total=len(tous)-tous.count("Absence justifée)
-    if total 0:
+    if total> 0:
         pourcentage=round(presents/total*100)
     else:
         pourcentage=100
