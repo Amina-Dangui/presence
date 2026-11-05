@@ -45,9 +45,9 @@ with st.sidebar.expander('Gérer les élèves'):
                    eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section}
                 else:
                   eleve = {'NOM': nouveau.strip()}
-               data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
-               conn.update(worksheet='eleves_' + ecole, data=data)
-               st.rerun()
+                data = pd.concat([data, pd.DataFrame([eleve])], ignore_index=True)
+                conn.update(worksheet='eleves_' + ecole, data=data)
+                st.rerun()
 
     st.subheader('Retirer')
     a_retirer = st.selectbox('Élève à retirer', data['NOM'].tolist(), key='retirer')
