@@ -25,7 +25,7 @@ if st.button("Enregistrer", type="primary"):
   nouvelles=pd.DataFrame(lignes)
   toutes=pd.concat([anciennes , nouvelles], ignore_index=True)
   conn.update(worksheet="presences_" + ecole, data=toutes)
-  st.sucess("Appel Enregistré")
+  st.success("Appel Enregistré")
   
 
 
