@@ -37,7 +37,7 @@ with st.sidebar.expander('Gérer les élèves'):
           if ecole == 'coranique':
              nv_section = st.selectbox('Genre', ['femme', 'homme'], key='nv_section')
              nv_groupe = st.selectbox('Groupe', [1, 2], key='nv_groupe')
-         if st.button('Ajouter'):
+          if st.button('Ajouter'):
             if nouveau.strip() == '':
                st.warning('Écris un nom')
             else:
