@@ -7,5 +7,5 @@ if ecole=="coranique":
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
 conn=st.connection("gsheets",type="GSheetsConnection")
 data=conn.read()
-data_filtre=data[(data["ECOLE"]==ecole) & (data["GENRE"]==section) & (data["GROUPE"]==groupe)
+data_filtre=data[(data["ECOLE"]==ecole) & (data["GENRE"]==section) & (data["GROUPE"]==groupe)]
 st.dataframe(data_filtre)
