@@ -31,7 +31,7 @@ for nom in liste_eleves:
     else:
         pourcentage=100
     with col2:
-      st.metric("Presence", str(pourcentage) + " ")
+      st.metric("Presence", str(pourcentage) + " % ")
     lignes.append({"DATE":str(jour),"ELEVE":nom, "STATUT":choix})  
 if st.button("Enregistrer", type="primary"):
   anciennes=conn.read(worksheet="presences_" + ecole,ttl=0)
