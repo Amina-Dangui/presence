@@ -31,7 +31,7 @@ with st.sidebar.expander('Gérer les élèves'):
     if st.button('Retirer'):
         data = data[data['NOM'] != a_retirer]
         conn.update(worksheet='eleves_' + ecole, data=data)
-       with st.sidebar.expander('Gérer les élèves'):
+        with st.sidebar.expander('Gérer les élèves'):
     st.subheader('Ajouter')
     nouveau = st.text_input('Nom du nouvel élève')
     if ecole == 'coranique':
