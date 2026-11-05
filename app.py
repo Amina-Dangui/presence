@@ -19,7 +19,31 @@ liste_eleves = data_filtre["NOM"].tolist()
 historique=conn.read(worksheet="presences_" + ecole,ttl=0)
 lignes=[]
 for nom in liste_eleves:
-    
+    titre1, titre2, titre3 = st.columns([2, 5, 1])
+titre1.markdown('*Nom*')
+titre2.markdown('*Statut*')
+titre3.markdown('*Présence*')
+st.divider()
+
+for nom in liste_eleves:
+    col1, col2, col3 = st.columns([2, 5, 1])
+
+    col1.markdown('### ' + nom)
+    choix = col2.radio(nom, statuts, horizontal=True, key=nom, label_visibility='collapsed')
+
+    passe = historique[historique['ELEVE'] == nom]['STATUT'].tolist()
+    tous = passe + [choix]
+    presents = tous.count('Present') + tous.count('Retard')
+    total = len(tous) - tous.count('Absence justifiée')
+    if total > 0:
+        pourcentage = round(presents / total * 100)
+    else:
+        pourcentage = 100
+
+    col3.markdown('### ' + str(pourcentage) + ' %')
+    st.divider()
+
+    lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix})
 if st.button("Enregistrer", type="primary"):
   anciennes=conn.read(worksheet="presences_" + ecole,ttl=0)
   nouvelles=pd.DataFrame(lignes)
