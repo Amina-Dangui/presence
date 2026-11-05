@@ -1,5 +1,6 @@
 import streamlit as st 
-import pandas as pd 
+import pandas as pd
+from streamlit_gsheets import GSheetsConnection
 st.title('Liste de presence')
 ecole=st.sidebar.selectbox("Choisis l'ecole", ['coranique','classique'])
 if ecole=="coranique":
