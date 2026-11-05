@@ -8,6 +8,7 @@ if ecole=="coranique":
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
 conn=st.connection("gsheets",type=GSheetsConnection)
 data=conn.read(worksheet="eleves_" + ecole, ttl=0)
+
 if ecole=="coranique":
     data_filtre=data[(data["SECTION"]==section) & (data["GROUPE"]==groupe)]
 else:                      
