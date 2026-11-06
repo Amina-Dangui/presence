@@ -3,7 +3,7 @@ import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 st.title(':green_book: Liste de présence')
 conn = st.connection('gsheets', type=GSheetsConnection)
-profs = conn.read(worksheet='profs', ttl=0)
+profs = conn.read(worksheet='profs', ttl="1h")
 
 choix_compte = st.radio('Bienvenue !', ['Me connecter', 'Créer mon compte'], horizontal=True)
 
@@ -19,6 +19,7 @@ if choix_compte == 'Créer mon compte':
             nouveau_prof = pd.DataFrame([{'NOM_PROF': nom_prof.strip(), 'CODE': nouveau_code.strip()}])
             profs = pd.concat([profs, nouveau_prof], ignore_index=True)
             conn.update(worksheet='profs', data=profs)
+            st.cache_data.clear()
             st.success('Compte créé ! Choisis « Me connecter » en haut.')
     st.stop()
 
@@ -31,7 +32,7 @@ if ecole=="coranique":
   section=st.sidebar.selectbox("Quel genre?", ["homme","femme"])
   groupe=st.sidebar.selectbox("Quel groupe",[1 , 2])
 
-tous_eleves = conn.read(worksheet="eleves_" + ecole , ttl=0)
+tous_eleves = conn.read(worksheet="eleves_" + ecole , ttl="1h")
 data=tous_eleves[tous_eleves["PROF"].astype(str)==code]
 with st.sidebar.expander('Gérer les élèves'):
     st.subheader('Ajouter')
@@ -49,6 +50,7 @@ with st.sidebar.expander('Gérer les élèves'):
                 eleve = {'NOM': nouveau.strip() , "PROF": code}
             data = pd.concat([tous_eleves, pd.DataFrame([eleve])], ignore_index=True)
             conn.update(worksheet='eleves_' + ecole, data=data)
+            st.cache_data.clear()
             st.rerun()
 
     st.subheader('Retirer')
@@ -56,6 +58,7 @@ with st.sidebar.expander('Gérer les élèves'):
     if st.button('Retirer'):
         data = tous_eleves[~((tous_eleves['NOM'] == a_retirer) & (tous_eleves["PROF"].astype(str)==code))]
         conn.update(worksheet='eleves_' + ecole, data=data)
+        st.cache_data.clear()
         st.rerun()
 
     
@@ -67,7 +70,7 @@ jour=st.date_input("Date du jour")
 st.header("Appel du jour")
 statuts=["Present","Retard", "Absent" , "Absence justifiée"]
 liste_eleves = data_filtre["NOM"].tolist()
-historique=conn.read(worksheet="presences_" + ecole,ttl=0)
+historique=conn.read(worksheet="presences_" + ecole,ttl="1h")
 historique = historique[historique["PROF"].astype(str)==code]
 lignes=[]
 
@@ -107,6 +110,7 @@ if st.button("Enregistrer", type="primary"):
   nouvelles=pd.DataFrame(lignes)
   toutes=pd.concat([anciennes , nouvelles], ignore_index=True)
   conn.update(worksheet="presences_" + ecole, data=toutes)
+  st.cache_data.clear()  
   st.success("Appel Enregistré")
     
   
