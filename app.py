@@ -129,6 +129,47 @@ if st.button("Enregistrer", type="primary"):
   conn.update(worksheet="presences_" + ecole, data=toutes)
   st.cache_data.clear()  
   st.success("Appel Enregistré")
+
+st.divider()
+st.subheader(':green_book: Exporter en PDF')
+
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font('Helvetica', 'B', 16)
+pdf.cell(0, 10, 'Liste de présence - école ' + ecole, new_x='LMARGIN', new_y='NEXT')
+pdf.set_font('Helvetica', '', 11)
+pdf.cell(0, 8, 'Document créé le ' + str(jour), new_x='LMARGIN', new_y='NEXT')
+pdf.ln(4)
+
+pdf.set_font('Helvetica', 'B', 11)
+pdf.cell(55, 8, 'Nom', border=1)
+pdf.cell(25, 8, 'Présents', border=1)
+pdf.cell(25, 8, 'Retards', border=1)
+pdf.cell(25, 8, 'Absents', border=1)
+pdf.cell(25, 8, 'Justifiés', border=1)
+pdf.cell(30, 8, 'Présence', border=1, new_x='LMARGIN', new_y='NEXT')
+
+pdf.set_font('Helvetica', '', 11)
+for nom in liste_eleves:
+    statuts_eleve = historique[historique['ELEVE'] == nom]['STATUT'].tolist()
+    p = statuts_eleve.count('Present')
+    r = statuts_eleve.count('Retard')
+    a = statuts_eleve.count('Absent')
+    j = statuts_eleve.count('Absence justifiée')
+    total_eleve = len(statuts_eleve) - j
+    if total_eleve > 0:
+        pct = round((p + r) / total_eleve * 100)
+    else:
+        pct = 100
+    pdf.cell(55, 8, str(nom), border=1)
+    pdf.cell(25, 8, str(p), border=1)
+    pdf.cell(25, 8, str(r), border=1)
+    pdf.cell(25, 8, str(a), border=1)
+    pdf.cell(25, 8, str(j), border=1)
+    pdf.cell(30, 8, str(pct) + ' %', border=1, new_x='LMARGIN', new_y='NEXT')
+
+fichier_pdf = bytes(pdf.output())
+st.download_button('Télécharger en PDF', data=fichier_pdf, file_name='presences_' + ecole + '.pdf', mime='application/pdf')
     
   
   
