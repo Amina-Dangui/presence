@@ -67,7 +67,7 @@ if ecole=="coranique":
 else:                      
     data_filtre=data
 jour=st.date_input("Date du jour")
-st.header("Appel du jour")
+st.header(":notebook: Appel du jour")
 statuts=["Present","Retard", "Absent" , "Absence justifiée"]
 liste_eleves = data_filtre["NOM"].tolist()
 historique=conn.read(worksheet="presences_" + ecole,ttl="1h")
