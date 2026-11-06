@@ -105,7 +105,7 @@ for nom in liste_eleves:
     st.divider()
 
     lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
-deja_fait=historique[(historique["DATE"].astype(str)==str(jour)) & (historique["ELEVE"].isin(liste__eleves))]
+deja_fait=historique[(historique["DATE"].astype(str)==str(jour)) & (historique["ELEVE"].isin(liste_eleves))]
 if len(deja_fait) > 0:
     st.info("L'appel de ce groupe a déjà été fait aujourd'hui.")
 if st.button("Enregistrer", type="primary"):
