@@ -115,7 +115,7 @@ texte_resume = ':white_check_mark: ' + str(nb_presents) + ' présents'
 texte_resume = texte_resume + ' · :clock3: ' + str(nb_retards) + ' retards'
 texte_resume = texte_resume + ' · :x: ' + str(nb_absents) + ' absents'
 texte_resume = texte_resume + ' · :page_facing_up: ' + str(nb_justifies) + ' justifiés'
-resume.info(texte_resume)    
+resume.success(texte_resume)    
 deja_fait=historique[(historique["DATE"].astype(str)==str(jour)) & (historique["ELEVE"].isin(liste_eleves))]
 if len(deja_fait) > 0:
     st.info("L'appel de ce groupe a déjà été fait aujourd'hui.")
