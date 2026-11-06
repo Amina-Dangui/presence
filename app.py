@@ -62,6 +62,10 @@ with st.sidebar.expander('Gérer les élèves'):
         noms = [n.strip() for n in liste_noms.split('\n') if n.strip() != '']
         if len(noms) == 0:
             st.warning('Écris au moins un nom')
+        elif len(noms) != len(set(noms)):
+            st.warning('La liste contient deux fois le même nom.')
+        elif any(n in data['NOM'].astype(str).tolist() for n in noms):
+            st.warning('Ces élèves existent déjà : ' + ', '.join([n for n in noms if n in data['NOM'].astype(str).tolist()]))    
         else:
             nouveaux = []
             for n in noms:
