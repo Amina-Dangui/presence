@@ -44,6 +44,8 @@ with st.sidebar.expander('Gérer les élèves'):
     if st.button('Ajouter'):
         if nouveau.strip() == '':
             st.warning('Écris un nom')
+        elif nouveau.strip() in data['NOM'].astype(str).tolist():
+            st.warning(nouveau.strip() + ' existe déjà. Ajoute une précision, par exemple ' + nouveau.strip() + ' B.')    
         else:
             if ecole == 'coranique':
                 eleve = {'NOM': nouveau.strip(), 'GROUPE': nv_groupe, 'SECTION': nv_section , "PROF": code}
