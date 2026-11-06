@@ -53,7 +53,24 @@ with st.sidebar.expander('Gérer les élèves'):
             conn.update(worksheet='eleves_' + ecole, data=data)
             st.cache_data.clear()
             st.rerun()
-
+            
+    st.subheader('Ajouter plusieurs élèves')
+    liste_noms = st.text_area('Un nom par ligne')
+    if st.button('Ajouter la liste'):
+        noms = [n.strip() for n in liste_noms.split('\n') if n.strip() != '']
+        if len(noms) == 0:
+            st.warning('Écris au moins un nom')
+        else:
+            nouveaux = []
+            for n in noms:
+                if ecole == 'coranique':
+                    nouveaux.append({'NOM': n, 'GROUPE': nv_groupe, 'SECTION': nv_section, 'PROF': code})
+                else:
+                    nouveaux.append({'NOM': n, 'PROF': code})
+            data = pd.concat([tous_eleves, pd.DataFrame(nouveaux)], ignore_index=True)
+            conn.update(worksheet='eleves_' + ecole, data=data)
+            st.cache_data.clear()
+            st.rerun()
     st.subheader('Retirer')
     a_retirer = st.selectbox('Élève à retirer', data['NOM'].tolist(), key='retirer')
     if st.button('Retirer'):
