@@ -92,7 +92,7 @@ for nom in liste_eleves:
     else:
         pourcentage = 100
 
-    col3.markdown('### ' + str(pourcentage) + ' %')
+    col3.markdown('### ' + str(pourcentage) + ' %').
     st.divider()
 
     lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
