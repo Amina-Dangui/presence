@@ -86,7 +86,7 @@ for nom in liste_eleves:
     col1.markdown('### ' + nom)
     choix = col2.radio(nom, statuts, horizontal=True, key=nom, label_visibility='collapsed')
 
-    passe = historique[historique['ELEVE'] == nom]['STATUT'].tolist()
+    passe = historique[(historique['ELEVE'] == nom) & (historique["DATE"].astype(str)!= str(jour))]["STATUT"].tolist()
     tous = passe + [choix]
     presents = tous.count('Present') + tous.count('Retard')
     total = len(tous) - tous.count('Absence justifiée')
@@ -105,8 +105,13 @@ for nom in liste_eleves:
     st.divider()
 
     lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
+deja_fait=historique[(historique["DATE"].astype(str)==str(jour)) & (historique["ELEVE"].isin(liste__eleves))]
+if len(deja_fait) 0:
+    st.info("L'appel de ce groupe a déjà été fait aujourd'hui.")
 if st.button("Enregistrer", type="primary"):
   anciennes=conn.read(worksheet="presences_" + ecole,ttl=0)
+  meme_appel = (anciennes["DATE"].astype(str)==str(jour)) &(anciennes["PROF"].astype(str)==code) & (anciennes["ELEVE"].isin(liste_eleves))
+  anciennes= anciennes[~meme_appel]  
   nouvelles=pd.DataFrame(lignes)
   toutes=pd.concat([anciennes , nouvelles], ignore_index=True)
   conn.update(worksheet="presences_" + ecole, data=toutes)
