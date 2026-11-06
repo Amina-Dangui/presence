@@ -92,7 +92,13 @@ for nom in liste_eleves:
     else:
         pourcentage = 100
 
-    col3.markdown('### ' + str(pourcentage) + ' %').
+    if pourcentage >= 75:
+        couleur = 'green'
+    elif pourcentage >= 50:
+        couleur = 'blue'
+    else:
+       couleur = 'red'
+    col3.markdown('### :' + couleur + '[' + str(pourcentage) + ' %]')
     st.divider()
 
     lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
