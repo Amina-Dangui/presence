@@ -68,6 +68,7 @@ else:
     data_filtre=data
 jour=st.date_input("Date du jour")
 st.header(":memo: Appel du jour")
+resume=st.empty()
 statuts=["Present","Retard", "Absent" , "Absence justifiée"]
 liste_eleves = data_filtre["NOM"].tolist()
 historique=conn.read(worksheet="presences_" + ecole,ttl="1h")
@@ -105,6 +106,16 @@ for nom in liste_eleves:
     st.divider()
 
     lignes.append({'DATE': str(jour), 'ELEVE': nom, 'STATUT': choix, "PROF":code})
+statuts_du_jour = [l['STATUT'] for l in lignes]
+nb_presents = statuts_du_jour.count('Present')
+nb_retards = statuts_du_jour.count('Retard')
+nb_absents = statuts_du_jour.count('Absent')
+nb_justifies = statuts_du_jour.count('Absence justifiée')
+texte_resume = ':white_check_mark: ' + str(nb_presents) + ' présents'
+texte_resume = texte_resume + ' · :clock3: ' + str(nb_retards) + ' retards'
+texte_resume = texte_resume + ' · :x: ' + str(nb_absents) + ' absents'
+texte_resume = texte_resume + ' · :page_facing_up: ' + str(nb_justifies) + ' justifiés'
+resume.info(texte_resume)    
 deja_fait=historique[(historique["DATE"].astype(str)==str(jour)) & (historique["ELEVE"].isin(liste_eleves))]
 if len(deja_fait) > 0:
     st.info("L'appel de ce groupe a déjà été fait aujourd'hui.")
