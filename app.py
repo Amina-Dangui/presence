@@ -108,6 +108,7 @@ if st.button("Enregistrer", type="primary"):
   toutes=pd.concat([anciennes , nouvelles], ignore_index=True)
   conn.update(worksheet="presences_" + ecole, data=toutes)
   st.success("Appel Enregistré")
+    
   
   
   
